@@ -7,10 +7,20 @@ describe('API Endpoints', () => {
     let token;
 
     beforeAll(async () => {
-        // Setup test database
-        await pool.query('DELETE FROM todos');
-        await pool.query('ALTER SEQUENCE todos_id_seq RESTART WITH 1');
+        // Verify we're using test database
+        const dbConfig = await pool.query('SELECT current_database()');
+        if (dbConfig.rows[0].current_database !== 'todos_test') {
+            throw new Error('Tests must be run on test database');
+        }
+
+        // Clean test database
+        await pool.query('TRUNCATE todos RESTART IDENTITY CASCADE');
         token = auth.generateToken('test-user');
+    });
+
+    afterEach(async () => {
+        // Clean up after each test
+        await pool.query('TRUNCATE todos RESTART IDENTITY CASCADE');
     });
 
     afterAll(async () => {

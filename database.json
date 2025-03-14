@@ -6,5 +6,13 @@
     "database": "todos",
     "user": "postgres",
     "password": "password02"
+  },
+  "test": {
+    "driver": "pg",
+    "host": "localhost",
+    "port": "2024",
+    "database": "todos_test",
+    "user": "postgres",
+    "password": "password02"
   }
 }

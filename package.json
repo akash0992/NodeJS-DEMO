@@ -9,10 +9,12 @@
     "prestart": "db-migrate up",
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "migrate:create": "db-migrate create",
     "migrate:up": "db-migrate up",
-    "migrate:down": "db-migrate down"
+    "migrate:down": "db-migrate down",
+    "pretest": "NODE_ENV=test db-migrate up -e test",
+    "posttest": "NODE_ENV=test db-migrate reset -e test"
   },
   "keywords": [],
   "author": "",
