@@ -2,83 +2,96 @@ const express = require('express');
 const router = express.Router();
 const { authMiddleware } = require('../middleware/auth');
 const { validate } = require('../middleware/validation');
-const itemsController = require('../controllers/items');
+const todosController = require('../controllers/todos');
 
 /**
  * @swagger
+ * tags:
+ *   - name: Authentication
+ *     description: User authentication endpoints
+ *   - name: Todos
+ *     description: Todo management endpoints
+ * 
  * components:
  *   schemas:
- *     Item:
+ *     Todo:
  *       type: object
  *       required:
  *         - name
  *       properties:
  *         id:
  *           type: integer
- *           description: The auto-generated id of the item
+ *           description: The auto-generated id of the todo
  *         name:
  *           type: string
- *           description: The name of the item
+ *           description: The name of the todo
  *         description:
  *           type: string
- *           description: The description of the item
- *         createdAt:
+ *           description: The description of the todo
+ *         created_at:
  *           type: string
  *           format: date-time
- *           description: The date the item was created
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *       example:
+ *         id: 1
+ *         name: Buy groceries
+ *         description: Get milk and bread
+ *         created_at: 2024-01-01T00:00:00.000Z
  */
 
 /**
  * @swagger
- * /api/items:
+ * /api/todos:
  *   get:
- *     summary: Returns all items
- *     tags: [Items]
+ *     summary: Returns all todos
+ *     tags: [Todos]
  *     responses:
  *       200:
- *         description: The list of items
+ *         description: The list of todos
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Item'
+ *                 $ref: '#/components/schemas/Todo'
  */
-router.get('/items', itemsController.getAllItems);
+router.get('/todos', todosController.getAllTodos);
 
 /**
  * @swagger
- * /api/items/{id}:
+ * /api/todos/{id}:
  *   get:
- *     summary: Get an item by id
- *     tags: [Items]
+ *     summary: Get a todo by id
+ *     tags: [Todos]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The item id
+ *         description: The todo id
  *     responses:
  *       200:
- *         description: The item
+ *         description: The todo
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Item'
+ *               $ref: '#/components/schemas/Todo'
  *       404:
- *         description: Item not found
+ *         description: Todo not found
  */
-router.get('/items/:id', itemsController.getItem);
+router.get('/todos/:id', todosController.getTodo);
 
 /**
  * @swagger
- * /api/items:
+ * /api/todos:
  *   post:
- *     summary: Create a new item
- *     tags: [Items]
+ *     summary: Create a new todo
+ *     tags: [Todos]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -94,33 +107,33 @@ router.get('/items/:id', itemsController.getItem);
  *                 type: string
  *     responses:
  *       201:
- *         description: The created item
+ *         description: The created todo
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Item'
+ *               $ref: '#/components/schemas/Todo'
  *       401:
  *         description: Unauthorized
  *       400:
  *         description: Validation error
  */
-router.post('/items', [authMiddleware, validate], itemsController.createItem);
+router.post('/todos', [authMiddleware, validate], todosController.createTodo);
 
 /**
  * @swagger
- * /api/items/{id}:
+ * /api/todos/{id}:
  *   put:
- *     summary: Update an item
- *     tags: [Items]
+ *     summary: Update a todo
+ *     tags: [Todos]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The item id
+ *         description: The todo id
  *     requestBody:
  *       required: true
  *       content:
@@ -134,41 +147,41 @@ router.post('/items', [authMiddleware, validate], itemsController.createItem);
  *                 type: string
  *     responses:
  *       200:
- *         description: The updated item
+ *         description: The updated todo
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Item'
+ *               $ref: '#/components/schemas/Todo'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
- *         description: Item not found
+ *         description: Todo not found
  */
-router.put('/items/:id', [authMiddleware, validate], itemsController.updateItem);
+router.put('/todos/:id', [authMiddleware, validate], todosController.updateTodo);
 
 /**
  * @swagger
- * /api/items/{id}:
+ * /api/todos/{id}:
  *   delete:
- *     summary: Delete an item
- *     tags: [Items]
+ *     summary: Delete a todo
+ *     tags: [Todos]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The item id
+ *         description: The todo id
  *     responses:
  *       204:
- *         description: Item deleted
+ *         description: Todo deleted
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
- *         description: Item not found
+ *         description: Todo not found
  */
-router.delete('/items/:id', authMiddleware, itemsController.deleteItem);
+router.delete('/todos/:id', authMiddleware, todosController.deleteTodo);
 
 module.exports = router;

@@ -31,14 +31,10 @@ describe('Authentication', () => {
     });
 
     it('should accept valid tokens', async () => {
-        const mockVerifyToken = jest.spyOn(auth, 'verifyToken')
-            .mockResolvedValue({ uid: 'test_user' });
-
-        mockReq.headers.authorization = 'Bearer valid_token';
+        const token = auth.generateToken('test-user');
+        mockReq.headers.authorization = `Bearer ${token}`;
         await authMiddleware(mockReq, mockRes, nextFunction);
         expect(nextFunction).toHaveBeenCalled();
         expect(mockReq.user).toBeDefined();
-
-        mockVerifyToken.mockRestore();
     });
 });

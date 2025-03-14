@@ -1,37 +1,15 @@
-const { initializeApp } = require('firebase/app');
-const { getAuth } = require('firebase/auth');
+const jwt = require('jsonwebtoken');
 
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY || "AIzaSyDrLsWMMDAkI0iddWylJADkaEZdurOw9HM",
-    authDomain: "nodejs-demo-5b1df.firebaseapp.com",
-    projectId: process.env.FIREBASE_PROJECT_ID || "nodejs-demo-5b1df",
-    storageBucket: "nodejs-demo-5b1df.firebasestorage.app",
-    messagingSenderId: "83159230684",
-    appId: process.env.FIREBASE_APP_ID || "1:83159230684:web:2f7a900fc7600e591e2c19",
-    measurementId: "G-LLEEFDJW2F"
-};
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 class Auth {
-    initialize() {
-        // Skip Firebase initialization in test environment
-        if (process.env.NODE_ENV !== 'test') {
-            const app = initializeApp(firebaseConfig);
-            this.auth = getAuth(app);
-        }
+    generateToken(userId) {
+        return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' });
     }
 
-    async verifyToken(token) {
+    verifyToken(token) {
         try {
-            // For testing purposes
-            if (process.env.NODE_ENV === 'test' && token === 'valid_token') {
-                return { uid: 'test_user' };
-            }
-
-            if (!this.auth) {
-                throw new Error('Auth not initialized');
-            }
-
-            return await this.auth.verifyIdToken(token);
+            return jwt.verify(token, JWT_SECRET);
         } catch (error) {
             throw new Error('Invalid token');
         }
