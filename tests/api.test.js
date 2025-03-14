@@ -1,61 +1,69 @@
 const request = require('supertest');
 const app = require('../src/app');
-const database = require('../src/services/database');
+const pool = require('../src/config/database');
+const { auth } = require('../src/config/auth');
 
 describe('API Endpoints', () => {
-    beforeEach(() => {
-        // Clear database before each test
-        database.items.clear();
-        database.nextId = 1;
+    let token;
+
+    beforeAll(async () => {
+        // Setup test database
+        await pool.query('DELETE FROM todos');
+        await pool.query('ALTER SEQUENCE todos_id_seq RESTART WITH 1');
+        token = auth.generateToken('test-user');
     });
 
-    describe('GET /api/items', () => {
-        it('should return all items', async () => {
-            database.create({ name: 'Test Item' });
-            const res = await request(app).get('/api/items');
+    afterAll(async () => {
+        await pool.end();
+    });
+
+    describe('GET /api/todos', () => {
+        it('should return all todos', async () => {
+            await pool.query("INSERT INTO todos (name) VALUES ('Test Todo')");
+            const res = await request(app).get('/api/todos');
             expect(res.status).toBe(200);
             expect(res.body).toHaveLength(1);
-            expect(res.body[0].name).toBe('Test Item');
+            expect(res.body[0].name).toBe('Test Todo');
         });
     });
 
-    describe('POST /api/items', () => {
-        it('should create a new item', async () => {
+    describe('POST /api/todos', () => {
+        it('should create a new todo', async () => {
             const res = await request(app)
-                .post('/api/items')
-                .set('Authorization', 'Bearer valid_token')
-                .send({ name: 'New Item' });
+                .post('/api/todos')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'New Todo' });
             expect(res.status).toBe(201);
-            expect(res.body.name).toBe('New Item');
+            expect(res.body.name).toBe('New Todo');
         });
 
         it('should validate input', async () => {
             const res = await request(app)
-                .post('/api/items')
-                .set('Authorization', 'Bearer valid_token')
+                .post('/api/todos')
+                .set('Authorization', `Bearer ${token}`)
                 .send({});
             expect(res.status).toBe(400);
         });
     });
 
-    describe('PUT /api/items/:id', () => {
-        it('should update an existing item', async () => {
-            const item = database.create({ name: 'Test Item' });
+    describe('PUT /api/todos/:id', () => {
+        it('should update an existing todo', async () => {
+            const todo = await pool.query("INSERT INTO todos (name) VALUES ('Test Todo') RETURNING *");
             const res = await request(app)
-                .put(`/api/items/${item.id}`)
-                .set('Authorization', 'Bearer valid_token')
-                .send({ name: 'Updated Item' });
+                .put(`/api/todos/${todo.rows[0].id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'Updated Todo' });
             expect(res.status).toBe(200);
-            expect(res.body.name).toBe('Updated Item');
+            expect(res.body.name).toBe('Updated Todo');
         });
     });
 
-    describe('DELETE /api/items/:id', () => {
-        it('should delete an existing item', async () => {
-            const item = database.create({ name: 'Test Item' });
+    describe('DELETE /api/todos/:id', () => {
+        it('should delete an existing todo', async () => {
+            const todo = await pool.query("INSERT INTO todos (name) VALUES ('Test Todo') RETURNING *");
             const res = await request(app)
-                .delete(`/api/items/${item.id}`)
-                .set('Authorization', 'Bearer valid_token');
+                .delete(`/api/todos/${todo.rows[0].id}`)
+                .set('Authorization', `Bearer ${token}`);
             expect(res.status).toBe(204);
         });
     });

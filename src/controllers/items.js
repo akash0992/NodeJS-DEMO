@@ -1,9 +1,9 @@
 const database = require('../services/database');
 const logger = require('../services/logger');
 
-exports.getAllItems = (req, res) => {
+exports.getAllItems = async (req, res) => {
     try {
-        const items = database.getAll();
+        const items = await database.getAll();
         res.json(items);
     } catch (error) {
         logger.error('Error getting items:', error);
@@ -11,9 +11,9 @@ exports.getAllItems = (req, res) => {
     }
 };
 
-exports.getItem = (req, res) => {
+exports.getItem = async (req, res) => {
     try {
-        const item = database.getById(req.params.id);
+        const item = await database.getById(req.params.id);
         if (!item) {
             return res.status(404).json({ error: 'Item not found' });
         }
@@ -24,9 +24,9 @@ exports.getItem = (req, res) => {
     }
 };
 
-exports.createItem = (req, res) => {
+exports.createItem = async (req, res) => {
     try {
-        const item = database.create(req.body);
+        const item = await database.create(req.body);
         res.status(201).json(item);
     } catch (error) {
         logger.error('Error creating item:', error);
@@ -34,9 +34,9 @@ exports.createItem = (req, res) => {
     }
 };
 
-exports.updateItem = (req, res) => {
+exports.updateItem = async (req, res) => {
     try {
-        const item = database.update(req.params.id, req.body);
+        const item = await database.update(req.params.id, req.body);
         if (!item) {
             return res.status(404).json({ error: 'Item not found' });
         }
@@ -47,10 +47,10 @@ exports.updateItem = (req, res) => {
     }
 };
 
-exports.deleteItem = (req, res) => {
+exports.deleteItem = async (req, res) => {
     try {
-        const deleted = database.delete(req.params.id);
-        if (!deleted) {
+        const item = await database.delete(req.params.id);
+        if (!item) {
             return res.status(404).json({ error: 'Item not found' });
         }
         res.status(204).send();
