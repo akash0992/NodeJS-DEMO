@@ -7,7 +7,7 @@ exports.up = function (db) {
   var filePath = path.join(
     __dirname,
     "sqls",
-    "20240101000001-create-todos-up.sql",
+    "20240101000004-add-auth-provider-up.sql",
   );
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, { encoding: "utf-8" }, function (err, data) {
@@ -23,7 +23,7 @@ exports.down = function (db) {
   var filePath = path.join(
     __dirname,
     "sqls",
-    "20240101000001-create-todos-down.sql",
+    "20240101000004-add-auth-provider-down.sql",
   );
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, { encoding: "utf-8" }, function (err, data) {

@@ -1,51 +1,53 @@
-const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Todos API',
-      version: '1.0.0',
-      description: 'A REST API for managing todos with JWT authentication',
+      title: "Todos API",
+      version: "1.0.0",
+      description: "A REST API for managing todos with JWT authentication",
     },
     servers: [
       {
-        url: process.env.API_URL || 'http://localhost:5000',
-        description: 'Development server',
+        url: process.env.API_URL || "http://localhost:5000",
+        description: "Development server",
       },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        }
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
       },
       responses: {
         UnauthorizedError: {
-          description: 'Access token is missing or invalid',
+          description: "Access token is missing or invalid",
           content: {
-            'application/json': {
+            "application/json": {
               schema: {
-                type: 'object',
+                type: "object",
                 properties: {
                   error: {
-                    type: 'string',
-                    example: 'Unauthorized'
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    type: "string",
+                    example: "Unauthorized",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    security: [{
-      bearerAuth: []
-    }]
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/routes/*.js'],
+  apis: ["./src/routes/*.js"],
 };
 
 module.exports = swaggerJsdoc(options);
