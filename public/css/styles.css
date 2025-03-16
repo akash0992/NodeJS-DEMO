@@ -11,12 +11,22 @@
   margin: 0 0.25rem;
 }
 
-.btn-delete {
-  color: #dc3545;
+.auth-form {
+  padding: 1rem;
 }
 
-.btn-edit {
-  color: #0d6efd;
+.btn-google {
+  background-color: #db4437;
+  color: white;
+}
+
+.btn-google:hover {
+  background-color: #c31f11;
+  color: white;
+}
+
+.table-responsive {
+  margin-top: 1rem;
 }
 
 @media (max-width: 768px) {

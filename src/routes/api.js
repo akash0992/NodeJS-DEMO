@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const { validate } = require('../middleware/validation');
-const todosController = require('../controllers/todos');
+const { authMiddleware } = require("../middleware/auth");
+const { validate } = require("../middleware/validation");
+const todosController = require("../controllers/todos");
 
 /**
  * @swagger
@@ -11,7 +11,7 @@ const todosController = require('../controllers/todos');
  *     description: User authentication endpoints
  *   - name: Todos
  *     description: Todo management endpoints
- * 
+ *
  * components:
  *   schemas:
  *     Todo:
@@ -57,7 +57,7 @@ const todosController = require('../controllers/todos');
  *               items:
  *                 $ref: '#/components/schemas/Todo'
  */
-router.get('/todos', todosController.getAllTodos);
+router.get("/todos", todosController.getAllTodos);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ router.get('/todos', todosController.getAllTodos);
  *       404:
  *         description: Todo not found
  */
-router.get('/todos/:id', todosController.getTodo);
+router.get("/todos/:id", todosController.getTodo);
 
 /**
  * @swagger
@@ -117,7 +117,7 @@ router.get('/todos/:id', todosController.getTodo);
  *       400:
  *         description: Validation error
  */
-router.post('/todos', [authMiddleware, validate], todosController.createTodo);
+router.post("/todos", [authMiddleware, validate], todosController.createTodo);
 
 /**
  * @swagger
@@ -157,7 +157,11 @@ router.post('/todos', [authMiddleware, validate], todosController.createTodo);
  *       404:
  *         description: Todo not found
  */
-router.put('/todos/:id', [authMiddleware, validate], todosController.updateTodo);
+router.put(
+  "/todos/:id",
+  [authMiddleware, validate],
+  todosController.updateTodo,
+);
 
 /**
  * @swagger
@@ -182,6 +186,6 @@ router.put('/todos/:id', [authMiddleware, validate], todosController.updateTodo)
  *       404:
  *         description: Todo not found
  */
-router.delete('/todos/:id', authMiddleware, todosController.deleteTodo);
+router.delete("/todos/:id", authMiddleware, todosController.deleteTodo);
 
 module.exports = router;

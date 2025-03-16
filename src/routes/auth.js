@@ -1,6 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authController = require('../controllers/auth');
+const authController = require("../controllers/auth");
+const passport = require("../config/passport");
 
 /**
  * @swagger
@@ -69,7 +70,7 @@ const authController = require('../controllers/auth');
  *                 user:
  *                   $ref: '#/components/schemas/User'
  */
-router.post('/register', authController.register);
+router.post("/register", authController.register);
 
 /**
  * @swagger
@@ -106,6 +107,20 @@ router.post('/register', authController.register);
  *       401:
  *         description: Invalid credentials
  */
-router.post('/login', authController.login);
+router.post("/login", authController.login);
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+  }),
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  authController.googleCallback,
+);
 
 module.exports = router;
