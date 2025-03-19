@@ -9,6 +9,7 @@ const securityMiddleware = require("./middleware/security");
 const logger = require("./services/logger");
 const pool = require("./config/database");
 const path = require("path");
+import postgreApi from './api/index.js'
 
 const app = express();
 
@@ -59,6 +60,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api", apiRoutes);
 
+//Route for postgress db crud apis
+app.use("/postgreApi", postgreApi);
 // Error handling
 app.use(errorMiddleware);
 
