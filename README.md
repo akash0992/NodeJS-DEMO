@@ -75,3 +75,8 @@ This API implements several security measures:
 ## API Documentation
 
 Access the Swagger documentation at `/api-docs` when the server is running.
+
+
+## PostgreSql table used 
+CREATE DATABASE testdb;
+CREATE TABLE emp (id SERIAL NOT NULL PRIMARY KEY, name text, department_id int, salary int);
