@@ -654,7 +654,17 @@
     <!-- Inline script using Fetch API -->
     <script>
       // API URLs
-      const API_URL = window.location.origin;
+      // const API_URL = window.location.origin;
+      function getApiBaseUrl() {
+        const url = window.location.origin;
+        // Temporary fix: If using https on EC2, switch to http
+        if (url.startsWith('https://') && !url.includes('localhost')) {
+          return url.replace('https://', 'http://');
+        }
+        return url;
+      }
+      
+      const API_URL = getApiBaseUrl();
       const AUTH_API = API_URL + "/api/auth";
       const TODOS_API = API_URL + "/api/todos";
 
