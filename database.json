@@ -2,7 +2,7 @@
   "dev": {
     "driver": "pg",
     "host": "localhost",
-    "port": "2024",
+    "port": "5432",
     "database": "todos",
     "user": "postgres",
     "password": "password02"
@@ -10,7 +10,7 @@
   "test": {
     "driver": "pg",
     "host": "localhost",
-    "port": "2024",
+    "port": "5432",
     "database": "todos_test",
     "user": "postgres",
     "password": "password02"
