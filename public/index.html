@@ -820,6 +820,7 @@
       async function login(username, password) {
         try {
           toggleButtonLoading("login-button", true);
+          console.log(" AUTH_API / login >>> ", AUTH_API);
           const response = await fetch(`${AUTH_API}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -847,6 +848,7 @@
       async function register(username, email, password) {
         try {
           toggleButtonLoading("register-button", true);
+          console.log(" AUTH_API / register >>> ", AUTH_API);
           const response = await fetch(`${AUTH_API}/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
