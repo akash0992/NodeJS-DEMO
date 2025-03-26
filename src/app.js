@@ -23,6 +23,11 @@ app.use(cors({
   secure: false
 }));
 
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
+
 // Database connection check
 const checkDatabaseConnection = async () => {
   try {
