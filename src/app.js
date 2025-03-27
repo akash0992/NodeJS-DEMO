@@ -49,6 +49,15 @@ checkDatabaseConnection();
 app.use(express.json());
 app.use(securityMiddleware);
 
+// Additional CSP headers middleware for extra security
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com;"
+  );
+  next();
+});
+
 // Static files configuration - place this before routes
 app.use("/static", express.static("public"));
 app.use(express.static(path.join(__dirname, "..", "public")));
